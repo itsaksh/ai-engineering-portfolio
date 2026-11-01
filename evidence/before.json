@@ -1,0 +1,55 @@
+{
+  "phase": "before",
+  "revision": "f4900e8f17ed1c52d005605680d1a75ea4a2a19e",
+  "issue": "https://github.com/FinanceFlash/unvibecode/issues/296",
+  "results": [
+    {
+      "case": "misdecoded_em_dash",
+      "expected_rejected": true,
+      "actual_rejected": false,
+      "correct": false
+    },
+    {
+      "case": "misdecoded_apostrophe",
+      "expected_rejected": true,
+      "actual_rejected": false,
+      "correct": false
+    },
+    {
+      "case": "existing_accent_marker",
+      "expected_rejected": true,
+      "actual_rejected": true,
+      "correct": true
+    },
+    {
+      "case": "existing_box_marker",
+      "expected_rejected": true,
+      "actual_rejected": true,
+      "correct": true
+    },
+    {
+      "case": "replacement_character",
+      "expected_rejected": true,
+      "actual_rejected": true,
+      "correct": true
+    },
+    {
+      "case": "valid_punctuation",
+      "expected_rejected": false,
+      "actual_rejected": false,
+      "correct": true
+    },
+    {
+      "case": "valid_multilingual",
+      "expected_rejected": false,
+      "actual_rejected": false,
+      "correct": true
+    },
+    {
+      "case": "valid_a_circumflex",
+      "expected_rejected": false,
+      "actual_rejected": false,
+      "correct": true
+    }
+  ]
+}

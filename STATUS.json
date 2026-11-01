@@ -1,0 +1,15 @@
+{
+  "issue_url": "https://github.com/FinanceFlash/unvibecode/issues/296",
+  "base_commit": "f4900e8f17ed1c52d005605680d1a75ea4a2a19e",
+  "local_status": "implemented and validated",
+  "publication_status": "public fork and open upstream pull request",
+  "pull_request_url": "https://github.com/FinanceFlash/unvibecode/pull/392",
+  "merged": false,
+  "fork_url": "https://github.com/itsaksh/unvibecode",
+  "branch": "fix/markdown-encoding-regressions",
+  "contribution_commit": "4147ff2fbfeedbabc3d1b1bf672709485c79b4a7",
+  "pull_request_state": "OPEN",
+  "upstream_ci_status": "action_required: maintainer approval",
+  "upstream_ci_url": "https://github.com/FinanceFlash/unvibecode/actions/runs/41320654802",
+  "portfolio_url": "https://github.com/itsaksh/ai-engineering-portfolio"
+}

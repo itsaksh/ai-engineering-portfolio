@@ -1,0 +1,90 @@
+diff --git a/.github/quality/README.md b/.github/quality/README.md
+index 5e161c1..0030fb1 100644
+--- a/.github/quality/README.md
++++ b/.github/quality/README.md
+@@ -19,3 +19,11 @@ python -m pytest -c .github/quality/pyproject.toml .github/quality/tests
+ ```
+ 
+ GitHub Actions runs the same commands for Python 3.11, 3.12, and 3.13.
++
++The Markdown encoding check includes common misdecoded em dashes and right
++apostrophes, alongside its existing corruption markers. Failures name the
++affected file and markers. Regression fixtures in
++`tests/test_encoding_regressions.py` verify rejection of those sequences and
++acceptance of correctly encoded punctuation, accented and multilingual text,
++the euro sign, and a standalone lowercase a with circumflex. This is a limited
++marker-based check, not a general-purpose encoding detector.
+diff --git a/.github/quality/tests/test_encoding_regressions.py b/.github/quality/tests/test_encoding_regressions.py
+new file mode 100644
+index 0000000..6e4330e
+--- /dev/null
++++ b/.github/quality/tests/test_encoding_regressions.py
+@@ -0,0 +1,46 @@
++import pytest
++
++from test_repository_quality import (
++    test_markdown_has_no_common_encoding_corruption as check_markdown_encoding,
++)
++
++
++@pytest.mark.parametrize(
++    "text",
++    [
++        "The result \u00e2\u20ac\u201d is ready",
++        "It\u00e2\u20ac\u2122s ready",
++        "caf\u00c3\u00a9",
++        "\u00e2\u201d",
++        "invalid \ufffd",
++    ],
++    ids=["em-dash", "apostrophe", "accent-marker", "box-marker", "replacement"],
++)
++def test_encoding_check_rejects_known_corruption(tmp_path, text):
++    sample = tmp_path / "broken.md"
++    sample.write_text(text, encoding="utf-8")
++
++    with pytest.raises(AssertionError, match=r"broken\.md"):
++        check_markdown_encoding(sample)
++
++
++@pytest.mark.parametrize(
++    "text",
++    [
++        "Plain ASCII documentation.",
++        "The result \u2014 is ready.",
++        "It\u2019s ready.",
++        (
++            "caf\u00e9, S\u00e3o Paulo, \u65e5\u672c\u8a9e, "
++            "\u0928\u092e\u0938\u094d\u0924\u0947"
++        ),
++        "A valid character: \u00e2",
++        "Price: 10 \u20ac",
++    ],
++    ids=["ascii", "em-dash", "apostrophe", "multilingual", "a-circumflex", "euro"],
++)
++def test_encoding_check_accepts_valid_unicode(tmp_path, text):
++    sample = tmp_path / "valid.md"
++    sample.write_text(text, encoding="utf-8")
++
++    check_markdown_encoding(sample)
+diff --git a/.github/quality/tests/test_repository_quality.py b/.github/quality/tests/test_repository_quality.py
+index 973f6fe..5f8a5c0 100644
+--- a/.github/quality/tests/test_repository_quality.py
++++ b/.github/quality/tests/test_repository_quality.py
+@@ -109,8 +109,15 @@ def test_github_automation_files_are_in_discoverable_locations():
+ @pytest.mark.parametrize("markdown_file", sorted(ROOT.rglob("*.md")))
+ def test_markdown_has_no_common_encoding_corruption(markdown_file):
+     content = markdown_file.read_text(encoding="utf-8")
+-    corrupt_markers = ("â”", "Ã", "�")
+-    assert not any(marker in content for marker in corrupt_markers)
++    corrupt_markers = (
++        "\u00e2\u201d",
++        "\u00c3",
++        "\ufffd",
++        "\u00e2\u20ac\u201d",  # UTF-8 em dash decoded as Windows-1252.
++        "\u00e2\u20ac\u2122",  # UTF-8 right apostrophe decoded as Windows-1252.
++    )
++    found = [marker for marker in corrupt_markers if marker in content]
++    assert not found, f"{markdown_file}: common encoding-corruption markers {found!r}"
+ 
+ 
+ @pytest.mark.parametrize("markdown_file", sorted(ROOT.rglob("*.md")))
