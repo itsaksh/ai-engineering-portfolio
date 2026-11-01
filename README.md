@@ -10,6 +10,8 @@ Three AI-assisted Python developer-tool projects prepared in November 2026, with
 
 The contribution is an open pull request, not a merged or accepted change. CI and publication records are in each project's validation documents and this repository's `STATUS.json`.
 
+[Download the portfolio bundle, individual source packages and Python wheels](https://github.com/itsaksh/ai-engineering-portfolio/releases/tag/portfolio-2026-11-01). Model weights and dependencies are downloaded separately; no personal resume files are included.
+
 ## Run and explain project 3
 
 Read [the contribution case study](CONTRIBUTION.md), [the submitted PR description](pull-request.md), and the before/after JSON records in `evidence/`. The [patch](issue-296.patch) changes exactly three upstream files and retains the upstream Apache-2.0 contribution license.
